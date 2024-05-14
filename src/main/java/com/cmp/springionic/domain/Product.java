@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -34,6 +36,7 @@ public class Product implements Serializable {
 	private String name;
 	private Double price;
 
+	@JsonBackReference
 	@ManyToMany
 	@JoinTable(name = "product_category", 
 		joinColumns = @JoinColumn(name = "product_id"), 

@@ -4,7 +4,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -31,6 +34,7 @@ public class Category implements Serializable {
 	private Long id;
 	private String name;
 	
-	@ManyToMany(mappedBy = "categories")
+	@JsonManagedReference
+	@ManyToMany(mappedBy = "categories", fetch = FetchType.EAGER)
 	private final List<Product> products = new ArrayList<>();
 }
