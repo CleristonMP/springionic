@@ -7,8 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.cmp.springionic.domain.enums.ClientType;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.ElementCollection;
@@ -41,7 +40,6 @@ public class Client implements Serializable {
 	private String cpfOrCnpj;
 	private Integer type;
 	
-	@JsonManagedReference
 	@OneToMany(mappedBy = "client", fetch = FetchType.EAGER)
 	private final List<Address> address = new ArrayList<>();
 	
@@ -49,7 +47,7 @@ public class Client implements Serializable {
 	@CollectionTable(name = "tb_phone")
 	private final Set<String> phones = new HashSet<>();
 	
-	@JsonBackReference
+	@JsonIgnore
 	@OneToMany(mappedBy = "client")
 	private final List<Order> orders = new ArrayList<>();
 
