@@ -13,6 +13,7 @@ import com.cmp.springionic.domain.Category;
 import com.cmp.springionic.domain.City;
 import com.cmp.springionic.domain.Client;
 import com.cmp.springionic.domain.Order;
+import com.cmp.springionic.domain.OrderItem;
 import com.cmp.springionic.domain.Payment;
 import com.cmp.springionic.domain.PaymentByBankSlip;
 import com.cmp.springionic.domain.PaymentByCard;
@@ -24,6 +25,7 @@ import com.cmp.springionic.repositories.AddressRepository;
 import com.cmp.springionic.repositories.CategoryRepository;
 import com.cmp.springionic.repositories.CityRepository;
 import com.cmp.springionic.repositories.ClientRepository;
+import com.cmp.springionic.repositories.OrderItemRepository;
 import com.cmp.springionic.repositories.OrderRepository;
 import com.cmp.springionic.repositories.PaymentRepository;
 import com.cmp.springionic.repositories.ProductRepository;
@@ -55,6 +57,9 @@ public class SpringionicApplication implements CommandLineRunner {
 	
 	@Autowired
 	private PaymentRepository paymentRepository;
+	
+	@Autowired
+	private OrderItemRepository orderItemRepository;
 
 	public static void main(String[] args) {
 		SpringApplication.run(SpringionicApplication.class, args);
@@ -118,5 +123,18 @@ public class SpringionicApplication implements CommandLineRunner {
 		
 		orderRepository.saveAll(Arrays.asList(o1, o2));
 		paymentRepository.saveAll(Arrays.asList(pay1, pay2));
+		
+		OrderItem oi1 = new OrderItem(o1, p1, 0.00, 1, 2000.0);
+		OrderItem oi2 = new OrderItem(o1, p3, 0.00, 2, 80.0);
+		OrderItem oi3 = new OrderItem(o2, p2, 100.0, 1, 800.0);
+		
+		o1.getItems().addAll(Arrays.asList(oi1, oi2));
+		o2.getItems().addAll(Arrays.asList(oi3));
+		
+		p1.getItems().addAll(Arrays.asList(oi1));
+		p2.getItems().addAll(Arrays.asList(oi3));
+		p3.getItems().addAll(Arrays.asList(oi2));
+		
+		orderItemRepository.saveAll(Arrays.asList(oi1, oi2, oi3));
 	}
 }

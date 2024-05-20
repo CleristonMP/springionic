@@ -1,6 +1,7 @@
 package com.cmp.springionic.domain;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 import com.cmp.springionic.domain.enums.PaymentStatus;
 
@@ -23,7 +24,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode
 public abstract class Payment implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
@@ -49,5 +49,22 @@ public abstract class Payment implements Serializable {
 	
 	public void setStatus(PaymentStatus status) {
 		this.status = status.getCod();
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Payment other = (Payment) obj;
+		return Objects.equals(id, other.id);
 	}
 }
