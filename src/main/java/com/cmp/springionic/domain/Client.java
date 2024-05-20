@@ -47,6 +47,9 @@ public class Client implements Serializable {
 	@ElementCollection(fetch = FetchType.EAGER)
 	@CollectionTable(name = "tb_phone")
 	private final Set<String> phones = new HashSet<>();
+	
+	@OneToMany(mappedBy = "client")
+	private final List<Order> orders = new ArrayList<>();
 
 	public Client(Long id, String name, String email, String cpfOrCnpj, ClientType type) {
 		this.id = id;
