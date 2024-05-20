@@ -7,6 +7,6 @@ import com.cmp.springionic.domain.OrderItem;
 import com.cmp.springionic.domain.OrderItemPK;
 
 @Repository
-public interface OrderItemRepository extends JpaRepository<OrderItem, Long> {
+public interface OrderItemRepository extends JpaRepository<OrderItem, OrderItemPK> {
 
 }

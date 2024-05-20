@@ -3,6 +3,7 @@ package com.cmp.springionic.domain;
 import java.util.Date;
 
 import com.cmp.springionic.domain.enums.PaymentStatus;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.persistence.Entity;
 import lombok.Getter;
@@ -16,7 +17,10 @@ import lombok.Setter;
 public class PaymentByBankSlip extends Payment {
 	private static final long serialVersionUID = 1L;
 
+	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date dueDate;
+	
+	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date paymentDate;
 	
 	public PaymentByBankSlip(Long id, PaymentStatus status, Order order, Date dueDate, Date paymentDate) {

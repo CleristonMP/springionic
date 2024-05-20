@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.cmp.springionic.domain.enums.ClientType;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CollectionTable;
@@ -48,6 +49,7 @@ public class Client implements Serializable {
 	@CollectionTable(name = "tb_phone")
 	private final Set<String> phones = new HashSet<>();
 	
+	@JsonBackReference
 	@OneToMany(mappedBy = "client")
 	private final List<Order> orders = new ArrayList<>();
 
