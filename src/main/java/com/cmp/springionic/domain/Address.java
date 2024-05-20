@@ -2,6 +2,8 @@ package com.cmp.springionic.domain;
 
 import java.io.Serializable;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -34,6 +36,7 @@ public class Address implements Serializable {
 	private String district;
 	private String zipCode;
 	
+	@JsonBackReference
 	@ManyToOne
 	@JoinColumn(name = "client_id")
 	private Client client;

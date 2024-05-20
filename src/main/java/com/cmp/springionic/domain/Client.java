@@ -7,10 +7,12 @@ import java.util.List;
 import java.util.Set;
 
 import com.cmp.springionic.domain.enums.ClientType;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -38,10 +40,11 @@ public class Client implements Serializable {
 	private String cpfOrCnpj;
 	private Integer type;
 	
-	@OneToMany(mappedBy = "client")
+	@JsonManagedReference
+	@OneToMany(mappedBy = "client", fetch = FetchType.EAGER)
 	private final List<Address> address = new ArrayList<>();
 	
-	@ElementCollection
+	@ElementCollection(fetch = FetchType.EAGER)
 	@CollectionTable(name = "tb_phone")
 	private final Set<String> phones = new HashSet<>();
 
