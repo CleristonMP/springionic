@@ -45,14 +45,16 @@ public class CategoryService {
 				"Objeto não encontrado! Id: " + id + ", Tipo: " + Category.class.getName()));
 	}
 
-	public Category insert(Category obj) {
-		obj.setId(null);
-		return repository.save(obj);
+	public CategoryDTO insert(CategoryDTO dto) {
+		dto.setId(null);
+		Category entity = repository.save(this.fromDTO(dto));
+		return new CategoryDTO(entity);
 	}
 
-	public Category update(Category obj) {
-		this.findById(obj.getId());
-		return repository.save(obj);
+	public CategoryDTO update(CategoryDTO dto) {
+		this.findById(dto.getId());
+		Category entity = repository.save(this.fromDTO(dto));
+		return new CategoryDTO(entity);
 	}
 
 	public void delete(Long id) {
@@ -62,5 +64,9 @@ public class CategoryService {
 		} catch (DataIntegrityViolationException e) {
 			throw new DataIntegrityException("Não é possível excluir uma categoria que possui produtos.");
 		}
+	}
+	
+	public Category fromDTO(CategoryDTO objDto) {
+		return new Category(objDto.getId(), objDto.getName());
 	}
 }

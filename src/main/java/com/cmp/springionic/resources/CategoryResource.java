@@ -21,6 +21,8 @@ import com.cmp.springionic.domain.Category;
 import com.cmp.springionic.dto.CategoryDTO;
 import com.cmp.springionic.services.CategoryService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping(value = "/categories")
 public class CategoryResource {
@@ -59,17 +61,17 @@ public class CategoryResource {
 	}
 
 	@PostMapping
-	public ResponseEntity<Void> insert(@RequestBody Category obj) {
-		obj = service.insert(obj);
+	public ResponseEntity<Void> insert(@Valid @RequestBody CategoryDTO dto) {
+		dto = service.insert(dto);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
-				.path("/{id}").buildAndExpand(obj.getId()).toUri();
+				.path("/{id}").buildAndExpand(dto.getId()).toUri();
 		return ResponseEntity.created(uri).build();
 	}
 	
 	@PutMapping(value = "/{id}")
-	public ResponseEntity<Void> update(@RequestBody Category obj, @PathVariable Long id) {
-		obj.setId(id);
-		obj = service.update(obj);
+	public ResponseEntity<Void> update(@Valid @RequestBody CategoryDTO dto, @PathVariable Long id) {
+		dto.setId(id);
+		dto = service.update(dto);
 		return ResponseEntity.noContent().build();
 	}
 	
