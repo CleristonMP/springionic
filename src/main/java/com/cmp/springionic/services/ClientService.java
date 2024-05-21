@@ -18,7 +18,6 @@ import com.cmp.springionic.domain.enums.ClientType;
 import com.cmp.springionic.dto.ClientDTO;
 import com.cmp.springionic.dto.ClientNewDTO;
 import com.cmp.springionic.repositories.AddressRepository;
-import com.cmp.springionic.repositories.CityRepository;
 import com.cmp.springionic.repositories.ClientRepository;
 import com.cmp.springionic.services.exceptions.DataIntegrityException;
 import com.cmp.springionic.services.exceptions.ObjectNotFoundException;
@@ -31,9 +30,6 @@ public class ClientService {
 	
 	@Autowired
 	private AddressRepository addressRepository;
-	
-	@Autowired
-	private CityRepository cityRepository;
 
 	public Client findById(Long id) {
 		Optional<Client> obj = repository.findById(id);
@@ -89,7 +85,7 @@ public class ClientService {
 	public Client fromDTO(ClientNewDTO objDto) {
 		Client cli = new Client(null, objDto.getName(), objDto.getEmail(), objDto.getCpfOrCnpj(),
 				ClientType.toEnum(objDto.getType()));
-		City city = cityRepository.getReferenceById(objDto.getCityId());
+		City city = new City(objDto.getCityId(), null, null);
 		Address address = new Address(null, objDto.getPublicPlace(), objDto.getNumber(), objDto.getComplement(),
 				objDto.getDistrict(), objDto.getZipCode(), cli, city);
 		cli.getAddress().add(address);
