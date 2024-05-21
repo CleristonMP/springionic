@@ -1,6 +1,7 @@
 package com.cmp.springionic.resources;
 
 import java.net.URI;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.cmp.springionic.domain.Category;
+import com.cmp.springionic.dto.CategoryDTO;
 import com.cmp.springionic.services.CategoryService;
 
 @RestController
@@ -28,6 +30,12 @@ public class CategoryResource {
 	public ResponseEntity<Category> find(@PathVariable Long id) {
 		Category obj = service.find(id);
 		return ResponseEntity.ok().body(obj);
+	}
+	
+	@GetMapping
+	public ResponseEntity<List<CategoryDTO>> findAll() {
+		List<CategoryDTO> list = service.findAll();
+		return ResponseEntity.ok().body(list);
 	}
 
 	@PostMapping
