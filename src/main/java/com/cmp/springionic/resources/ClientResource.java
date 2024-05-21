@@ -19,6 +19,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.cmp.springionic.domain.Client;
 import com.cmp.springionic.dto.ClientDTO;
+import com.cmp.springionic.dto.ClientNewDTO;
 import com.cmp.springionic.services.ClientService;
 
 import jakarta.validation.Valid;
@@ -61,7 +62,7 @@ public class ClientResource {
 	}
 
 	@PostMapping
-	public ResponseEntity<Void> insert(@Valid @RequestBody ClientDTO dto) {
+	public ResponseEntity<Void> insert(@Valid @RequestBody ClientNewDTO dto) {
 		dto = service.insert(dto);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
 				.path("/{id}").buildAndExpand(dto.getId()).toUri();
