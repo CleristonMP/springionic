@@ -19,7 +19,7 @@ public class ClientResource {
 
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<Client> find(@PathVariable Long id) {
-		Client obj = service.search(id);
+		Client obj = service.find(id);
 		return ResponseEntity.ok().body(obj);
 	}
 }
