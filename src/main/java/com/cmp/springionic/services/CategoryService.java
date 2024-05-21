@@ -52,8 +52,9 @@ public class CategoryService {
 	}
 
 	public CategoryDTO update(CategoryDTO dto) {
-		this.findById(dto.getId());
-		Category entity = repository.save(this.fromDTO(dto));
+		Category entity = this.findById(dto.getId());
+		this.updateData(entity, dto);
+		entity = repository.save(entity);
 		return new CategoryDTO(entity);
 	}
 
@@ -68,5 +69,9 @@ public class CategoryService {
 	
 	public Category fromDTO(CategoryDTO objDto) {
 		return new Category(objDto.getId(), objDto.getName());
+	}
+	
+	private void updateData(Category entity, CategoryDTO dto) {
+		entity.setName(dto.getName());
 	}
 }
