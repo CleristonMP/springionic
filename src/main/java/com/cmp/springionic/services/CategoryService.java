@@ -3,10 +3,12 @@ package com.cmp.springionic.services;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.cmp.springionic.domain.Category;
 import com.cmp.springionic.repositories.CategoryRepository;
+import com.cmp.springionic.services.exceptions.DataIntegrityException;
 import com.cmp.springionic.services.exceptions.ObjectNotFoundException;
 
 @Service
@@ -29,5 +31,14 @@ public class CategoryService {
 	public Category update(Category obj) {
 		this.find(obj.getId());
 		return repository.save(obj);
+	}
+	
+	public void delete(Long id) {
+		this.find(id);
+		try {
+			repository.deleteById(id);
+		} catch (DataIntegrityViolationException e) {
+			throw new DataIntegrityException("Não é possível excluir uma categoria que possui produtos.");
+		}
 	}
 }
