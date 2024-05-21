@@ -6,6 +6,8 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.cmp.springionic.domain.Category;
@@ -24,8 +26,20 @@ public class CategoryService {
 		List<Category> list = repository.findAll();
 		return list.stream().map(obj -> new CategoryDTO(obj)).collect(Collectors.toList());
 	}
+	
+// 	Método antigo
+//	public Page<CategoryDTO> findAllPaged(Integer page, Integer linesPerPage, String orderBy, String direction) {
+//		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
+//		Page<Category> pageObj = repository.findAll(pageRequest);
+//		return pageObj.map(obj -> new CategoryDTO(obj));
+//	}
+	
+	public Page<CategoryDTO> findAllPaged(Pageable pageable) {
+	Page<Category> page = repository.findAll(pageable);
+	return page.map(obj -> new CategoryDTO(obj));
+}
 
-	public Category find(Long id) {
+	public Category findById(Long id) {
 		Optional<Category> obj = repository.findById(id);
 		return obj.orElseThrow(() -> new ObjectNotFoundException(
 				"Objeto não encontrado! Id: " + id + ", Tipo: " + Category.class.getName()));
@@ -37,12 +51,12 @@ public class CategoryService {
 	}
 
 	public Category update(Category obj) {
-		this.find(obj.getId());
+		this.findById(obj.getId());
 		return repository.save(obj);
 	}
 
 	public void delete(Long id) {
-		this.find(id);
+		this.findById(id);
 		try {
 			repository.deleteById(id);
 		} catch (DataIntegrityViolationException e) {

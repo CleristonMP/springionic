@@ -45,19 +45,19 @@ public class SpringionicApplication implements CommandLineRunner {
 
 	@Autowired
 	private CityRepository cityRepository;
-	
+
 	@Autowired
 	private ClientRepository clientRepository;
-	
+
 	@Autowired
 	private AddressRepository addressRepository;
-	
+
 	@Autowired
 	private OrderRepository orderRepository;
-	
+
 	@Autowired
 	private PaymentRepository paymentRepository;
-	
+
 	@Autowired
 	private OrderItemRepository orderItemRepository;
 
@@ -69,6 +69,11 @@ public class SpringionicApplication implements CommandLineRunner {
 	public void run(String... args) throws Exception {
 		Category cat1 = new Category(null, "Informática");
 		Category cat2 = new Category(null, "Escritório");
+		Category cat3 = new Category(null, "Cama, mesa e banho");
+		Category cat4 = new Category(null, "Eletrônicos");
+		Category cat5 = new Category(null, "Jardinagem");
+		Category cat6 = new Category(null, "Decoração");
+		Category cat7 = new Category(null, "Perfumaria");
 
 		Product p1 = new Product(null, "Computador", 2000.00);
 		Product p2 = new Product(null, "Impressora", 800.00);
@@ -81,7 +86,7 @@ public class SpringionicApplication implements CommandLineRunner {
 		p2.getCategories().addAll(Arrays.asList(cat1, cat2));
 		p3.getCategories().addAll(Arrays.asList(cat1));
 
-		categoryRepository.saveAll(Arrays.asList(cat1, cat2));
+		categoryRepository.saveAll(Arrays.asList(cat1, cat2, cat3, cat4, cat5, cat6, cat7));
 		productRepository.saveAll(Arrays.asList(p1, p2, p3));
 
 		State stt1 = new State(null, "Minas Gerias");
@@ -104,37 +109,37 @@ public class SpringionicApplication implements CommandLineRunner {
 		Address a2 = new Address(null, "Av. Matos", "105", "Sala 800", "Centro", "38777012", cli1, c2);
 
 		cli1.getAddress().addAll(Arrays.asList(a1, a2));
-		
+
 		clientRepository.saveAll(Arrays.asList(cli1));
 		addressRepository.saveAll(Arrays.asList(a1, a2));
-		
+
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-		
+
 		Order o1 = new Order(null, sdf.parse("30/09/2017 10:32"), cli1, a1);
 		Order o2 = new Order(null, sdf.parse("10/10/2017 19:35"), cli1, a2);
-		
+
 		Payment pay1 = new PaymentByCard(null, PaymentStatus.SETTLED, o1, 6);
 		o1.setPayment(pay1);
-		
+
 		Payment pay2 = new PaymentByBankSlip(null, PaymentStatus.PENDING, o2, sdf.parse("20/10/2017 00:00"), null);
 		o2.setPayment(pay2);
-		
+
 		cli1.getOrders().addAll(Arrays.asList(o1, o2));
-		
+
 		orderRepository.saveAll(Arrays.asList(o1, o2));
 		paymentRepository.saveAll(Arrays.asList(pay1, pay2));
-		
+
 		OrderItem oi1 = new OrderItem(o1, p1, 0.00, 1, 2000.0);
 		OrderItem oi2 = new OrderItem(o1, p3, 0.00, 2, 80.0);
 		OrderItem oi3 = new OrderItem(o2, p2, 100.0, 1, 800.0);
-		
+
 		o1.getItems().addAll(Arrays.asList(oi1, oi2));
 		o2.getItems().addAll(Arrays.asList(oi3));
-		
+
 		p1.getItems().addAll(Arrays.asList(oi1));
 		p2.getItems().addAll(Arrays.asList(oi3));
 		p3.getItems().addAll(Arrays.asList(oi2));
-		
+
 		orderItemRepository.saveAll(Arrays.asList(oi1, oi2, oi3));
 	}
 }

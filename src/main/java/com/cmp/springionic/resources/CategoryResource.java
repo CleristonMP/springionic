@@ -4,6 +4,8 @@ import java.net.URI;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,7 +30,7 @@ public class CategoryResource {
 
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<Category> find(@PathVariable Long id) {
-		Category obj = service.find(id);
+		Category obj = service.findById(id);
 		return ResponseEntity.ok().body(obj);
 	}
 	
@@ -36,6 +38,24 @@ public class CategoryResource {
 	public ResponseEntity<List<CategoryDTO>> findAll() {
 		List<CategoryDTO> list = service.findAll();
 		return ResponseEntity.ok().body(list);
+	}
+	
+//	Método antigo
+//	@GetMapping(value = "/page")
+//	public ResponseEntity<Page<CategoryDTO>> findPage(
+//			@RequestParam(value = "page", defaultValue = "0") Integer page, 
+//			@RequestParam(value = "linesPerPage", defaultValue = "24") Integer linesPerPage, 
+//			@RequestParam(value = "orderBy", defaultValue = "name") String orderBy, 
+//			@RequestParam(value = "direction", defaultValue = "ASC") String direction
+//			) {
+//		Page<CategoryDTO> pageObj = service.findAllPaged(page, linesPerPage, orderBy, direction);
+//		return ResponseEntity.ok().body(pageObj);
+//	}
+	
+	@GetMapping(value = "/page")
+	public ResponseEntity<Page<CategoryDTO>> findAllPaged(Pageable pageable) {
+		Page<CategoryDTO> page = service.findAllPaged(pageable);
+		return ResponseEntity.ok().body(page);
 	}
 
 	@PostMapping
