@@ -18,8 +18,8 @@ public class OrderResource {
 	private OrderService service;
 
 	@GetMapping(value = "/{id}")
-	public ResponseEntity<Order> find(@PathVariable Long id) {
-		Order obj = service.find(id);
+	public ResponseEntity<Order> findById(@PathVariable Long id) {
+		Order obj = service.findById(id);
 		return ResponseEntity.ok().body(obj);
 	}
 }
