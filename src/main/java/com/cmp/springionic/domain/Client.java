@@ -9,6 +9,7 @@ import java.util.Set;
 import com.cmp.springionic.domain.enums.ClientType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
@@ -40,7 +41,7 @@ public class Client implements Serializable {
 	private String cpfOrCnpj;
 	private Integer type;
 	
-	@OneToMany(mappedBy = "client", fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "client", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private final List<Address> address = new ArrayList<>();
 	
 	@ElementCollection(fetch = FetchType.EAGER)
