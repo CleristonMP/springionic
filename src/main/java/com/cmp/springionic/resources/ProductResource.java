@@ -40,4 +40,13 @@ public class ProductResource {
 		Page<ProductDTO> page = service.search(nameDecoded, ids, pageable);
 		return ResponseEntity.ok().body(page);
 	}
+	
+//	@GetMapping
+//	public ResponseEntity<Page<ProductDTO>> findAllPaged(
+//			@RequestParam(value = "name", defaultValue = "") String name,
+//			@RequestParam(value = "ids", defaultValue = "") List<Long> ids,
+//			Pageable pageable) {
+//		Page<ProductDTO> page = service.search(name.trim(), ids, pageable);
+//		return ResponseEntity.ok().body(page);
+//	}
 }

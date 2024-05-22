@@ -14,10 +14,19 @@ import com.cmp.springionic.domain.Product;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
+	@Transactional(readOnly = true)
+	Page<Product> findDistinctByNameContainingAndCategoriesIn(String name, List<Category> categories, Pageable pageable);
+
 //	@Query("SELECT DISTINCT obj FROM Product obj INNER JOIN obj.categories cat "
 //			+ "WHERE obj.name LIKE %:name% AND cat IN :categories")
 //	Page<Product> search(@Param("name") String name, @Param("categories") List<Category> categories, Pageable pageable);
 	
-	@Transactional(readOnly = true)
-	Page<Product> findDistinctByNameContainingAndCategoriesIn(String name, List<Category> categories, Pageable pageable);
+//	@Transactional(readOnly = true)
+//	@Query("SELECT DISTINCT obj FROM Product obj INNER JOIN obj.categories cats "
+//			+ "WHERE (COALESCE(:categories) IS NULL OR cats IN :categories) AND "
+//			+ "(LOWER(obj.name) LIKE LOWER(CONCAT('%',:name,'%')))")
+//	Page<Product> find(String name, List<Category> categories, Pageable pageable);
+//	
+//	@Query("SELECT obj FROM Product obj JOIN FETCH obj.categories WHERE obj IN :products")
+//	List<Product> findProductsWithCategories(List<Product> products);
 }

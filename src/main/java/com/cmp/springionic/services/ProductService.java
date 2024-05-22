@@ -35,4 +35,11 @@ public class ProductService {
 		Page<Product> page = repository.findDistinctByNameContainingAndCategoriesIn(name, categories, pageable);
 		return page.map(prod -> new ProductDTO(prod));
 	}
+	
+//	public Page<ProductDTO> search(String name, List<Long> ids, Pageable pageable) {
+//		List<Category> categories = (ids == null) ? null : categoryRepository.findAllById(ids);
+//		Page<Product> page = repository.find(name, categories, pageable);
+//		repository.findProductsWithCategories(page.getContent());
+//		return page.map(prod -> new ProductDTO(prod));
+//	}
 }
