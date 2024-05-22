@@ -3,6 +3,7 @@ package com.cmp.springionic.dto;
 import java.io.Serializable;
 
 import com.cmp.springionic.domain.Client;
+import com.cmp.springionic.services.validation.ClientUpdate;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
@@ -14,6 +15,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
+@ClientUpdate
 public class ClientDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
