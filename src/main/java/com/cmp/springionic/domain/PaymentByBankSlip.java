@@ -4,6 +4,7 @@ import java.util.Date;
 
 import com.cmp.springionic.domain.enums.PaymentStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 
 import jakarta.persistence.Entity;
 import lombok.Getter;
@@ -14,6 +15,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
+@JsonTypeName("paymentByBankSlip")
 public class PaymentByBankSlip extends Payment {
 	private static final long serialVersionUID = 1L;
 
