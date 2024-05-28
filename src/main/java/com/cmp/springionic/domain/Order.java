@@ -1,8 +1,11 @@
 package com.cmp.springionic.domain;
 
 import java.io.Serializable;
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
 
@@ -83,5 +86,27 @@ public class Order implements Serializable {
 			return false;
 		Order other = (Order) obj;
 		return Objects.equals(id, other.id);
+	}
+
+	@Override
+	public String toString() {
+		NumberFormat nf = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+		StringBuilder builder = new StringBuilder();
+		builder.append("Pedido número: ");
+		builder.append(this.getId());
+		builder.append(", Instante: ");
+		builder.append(sdf.format(this.getInstant()));
+		builder.append(", Cliente: ");
+		builder.append(this.getClient().getName());
+		builder.append(", Situação do pagamento: ");
+		builder.append(this.getPayment().getStatus().getDescription());
+		builder.append("\nDetalhes:\n");
+		for (OrderItem oi : this.getItems()) {
+			builder.append(oi.toString());
+		}
+		builder.append("Valor total: ");
+		builder.append(nf.format(this.getTotalValue()));
+		return builder.toString();
 	}
 }

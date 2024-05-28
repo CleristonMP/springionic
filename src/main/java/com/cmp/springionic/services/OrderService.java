@@ -14,7 +14,6 @@ import com.cmp.springionic.domain.enums.PaymentStatus;
 import com.cmp.springionic.repositories.OrderItemRepository;
 import com.cmp.springionic.repositories.OrderRepository;
 import com.cmp.springionic.repositories.PaymentRepository;
-import com.cmp.springionic.repositories.ProductRepository;
 import com.cmp.springionic.services.exceptions.ObjectNotFoundException;
 
 @Service
@@ -30,10 +29,13 @@ public class OrderService {
 	private PaymentRepository paymentRepository;
 
 	@Autowired
-	private ProductRepository productRepository;
+	private ProductService productService;
 	
 	@Autowired
 	private OrderItemRepository orderItemRepository;
+	
+	@Autowired
+	private ClientService clientService;
 	
 	public Order findById(Long id) {
 		Optional<Order> obj = repository.findById(id);
@@ -45,6 +47,7 @@ public class OrderService {
 	public Order insert(Order obj) {
 		obj.setId(null);
 		obj.setInstant(new Date());
+		obj.setClient(clientService.findById(obj.getClient().getId()));
 		obj.getPayment().setStatus(PaymentStatus.PENDING);
 		obj.getPayment().setOrder(obj);
 		if (obj.getPayment() instanceof PaymentByBankSlip) {
@@ -55,10 +58,12 @@ public class OrderService {
 		paymentRepository.save(obj.getPayment());
 		for (OrderItem oi : obj.getItems()) {
 			oi.setDiscount(0.0);
-			oi.setPrice(productRepository.getReferenceById(oi.getProduct().getId()).getPrice());
+			oi.setProduct(productService.findById(oi.getProduct().getId()));
+			oi.setPrice(oi.getProduct().getPrice());
 			oi.setOrder(obj);
 		}
 		orderItemRepository.saveAll(obj.getItems());
+		System.out.println(obj);
 		return obj;
 	}
 }

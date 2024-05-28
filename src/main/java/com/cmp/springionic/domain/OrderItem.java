@@ -1,6 +1,8 @@
 package com.cmp.springionic.domain;
 
 import java.io.Serializable;
+import java.text.NumberFormat;
+import java.util.Locale;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -57,5 +59,20 @@ public class OrderItem implements Serializable {
 	
 	public void setProduct(Product product) {
 		this.id.setProduct(product);
+	}
+
+	@Override
+	public String toString() {
+		NumberFormat nf = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
+		StringBuilder builder = new StringBuilder();
+		builder.append(this.getProduct().getName());
+		builder.append(", Qtd: ");
+		builder.append(this.getQuantity());
+		builder.append(", Preço unitário: ");
+		builder.append(nf.format(this.getPrice()));
+		builder.append(", Subtotal: ");
+		builder.append(nf.format(this.getSubTotal()));
+		builder.append("\n");
+		return builder.toString();
 	}
 }
