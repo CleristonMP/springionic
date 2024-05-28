@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.cmp.springionic.domain.Address;
@@ -59,6 +60,9 @@ public class DBService {
 
 	@Autowired
 	private OrderItemRepository orderItemRepository;
+	
+	@Value("${default.recipient}")
+	private String recipient;
 
 	public void instantiateTestDatabase() throws ParseException {
 		Category cat1 = new Category(null, "Informática");
@@ -117,7 +121,7 @@ public class DBService {
 		stateRepository.saveAll(Arrays.asList(stt1, stt2));
 		cityRepository.saveAll(Arrays.asList(c1, c2, c3));
 
-		Client cli1 = new Client(null, "Maria Silva", "maria@gmail.com", "36325415377", ClientType.INDIVIDUAL);
+		Client cli1 = new Client(null, "Maria Silva", recipient, "36325415377", ClientType.INDIVIDUAL);
 		cli1.getPhones().addAll(Arrays.asList("27568945", "98978756321"));
 
 		Address a1 = new Address(null, "Rua Flores", "300", "Apt 303", "Jardim", "38220834", cli1, c1);
