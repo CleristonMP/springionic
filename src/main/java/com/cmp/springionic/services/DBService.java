@@ -22,6 +22,7 @@ import com.cmp.springionic.domain.Product;
 import com.cmp.springionic.domain.State;
 import com.cmp.springionic.domain.enums.ClientType;
 import com.cmp.springionic.domain.enums.PaymentStatus;
+import com.cmp.springionic.domain.enums.Role;
 import com.cmp.springionic.repositories.AddressRepository;
 import com.cmp.springionic.repositories.CategoryRepository;
 import com.cmp.springionic.repositories.CityRepository;
@@ -128,13 +129,19 @@ public class DBService {
 		Client cli1 = new Client(null, "Maria Silva", recipient, "36325415377", ClientType.INDIVIDUAL, encoder.encode("123"));
 		cli1.getPhones().addAll(Arrays.asList("27568945", "98978756321"));
 
+		Client cli2 = new Client(null, "Ana Costa", null, "31628382740", ClientType.INDIVIDUAL, encoder.encode("123"));
+		cli2.addRole(Role.ADMIN);
+		cli2.getPhones().addAll(Arrays.asList("93883321", "34252625"));
+		
 		Address a1 = new Address(null, "Rua Flores", "300", "Apt 303", "Jardim", "38220834", cli1, c1);
 		Address a2 = new Address(null, "Av. Matos", "105", "Sala 800", "Centro", "38777012", cli1, c2);
+		Address a3 = new Address(null, "Av. Floriano", "2106", null, "Centro", "281777012", cli2, c2);
 
 		cli1.getAddress().addAll(Arrays.asList(a1, a2));
+		cli2.getAddress().addAll(Arrays.asList(a3));
 
-		clientRepository.saveAll(Arrays.asList(cli1));
-		addressRepository.saveAll(Arrays.asList(a1, a2));
+		clientRepository.saveAll(Arrays.asList(cli1, cli2));
+		addressRepository.saveAll(Arrays.asList(a1, a2, a3));
 
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 

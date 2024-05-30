@@ -5,8 +5,10 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.cmp.springionic.domain.enums.ClientType;
+import com.cmp.springionic.domain.enums.Role;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
@@ -22,12 +24,10 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Table(name = "tb_client")
-@NoArgsConstructor
 @Getter
 @Setter
 @EqualsAndHashCode
@@ -54,9 +54,17 @@ public class Client implements Serializable {
 	@CollectionTable(name = "tb_phone")
 	private final Set<String> phones = new HashSet<>();
 	
+	@ElementCollection(fetch=FetchType.EAGER)
+	@CollectionTable(name = "tb_roles")
+	private final Set<Integer> roles = new HashSet<>();
+	
 	@JsonIgnore
 	@OneToMany(mappedBy = "client")
 	private final List<Order> orders = new ArrayList<>();
+	
+	public Client() {
+		this.addRole(Role.CLIENT);
+	}
 
 	public Client(Long id, String name, String email, String cpfOrCnpj, ClientType type, String password) {
 		this.id = id;
@@ -65,6 +73,7 @@ public class Client implements Serializable {
 		this.cpfOrCnpj = cpfOrCnpj;
 		this.type = (type == null) ? null : type.getCod();
 		this.password = password;
+		this.addRole(Role.CLIENT);
 	}
 	
 	public ClientType getType() {
@@ -73,5 +82,13 @@ public class Client implements Serializable {
 	
 	public void SetType(ClientType type) {
 		this.type = type.getCod();
+	}
+	
+	public Set<Role> getRoles() {
+		return this.roles.stream().map(x -> Role.toEnum(x)).collect(Collectors.toSet());
+	}
+	
+	public void addRole(Role role) {
+		this.roles.add(role.getCod());
 	}
 }
