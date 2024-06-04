@@ -3,6 +3,7 @@ package com.cmp.springionic.config;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -22,7 +23,7 @@ public class JWTTokenService {
 	@Value("${jwt.expiration}")
 	private Integer jwtExpiration;
 	
-	@Value("${spring.security.oauth2.authorizationserver.issuer}")
+	@Value("${jwt.issuer}")
 	private String issuer;
     
     public String generateToken(Client client){
@@ -40,20 +41,39 @@ public class JWTTokenService {
         }
     }
 
-    public String validateToken(String token){
+    public boolean validateToken(String token){
         try {
-            Algorithm algorithm = Algorithm.HMAC256(jwtSecret);
-            return JWT.require(algorithm)
-                    .withIssuer(issuer)
-                    .build()
-                    .verify(token)
-                    .getSubject();
+            Algorithm algorithm = Algorithm.HMAC512(jwtSecret);
+            var decodedToken = JWT.require(algorithm).withIssuer(issuer).build().verify(token);
+            var username = decodedToken.getSubject();
+            var expirationDate = decodedToken.getExpiresAt();
+            Date now = new Date(System.currentTimeMillis());
+            if (username != null && expirationDate != null && now.before(expirationDate)) {
+            	return true;
+            }
+            
+//            return JWT.require(algorithm)
+//                    .withIssuer(issuer)
+//                    .build()
+//                    .verify(token)
+//                    .getSubject();
         } catch (JWTVerificationException exception) {
-            return null;
+        	return false;
+//            return null;
         }
+		return false;
     }
 
     private Instant generateExpirationDate(){
         return LocalDateTime.now().plusSeconds(jwtExpiration).toInstant(ZoneOffset.of("-03:00"));
     }
+
+	public String getUsername(String token) {
+        Algorithm algorithm = Algorithm.HMAC512(jwtSecret);
+        var decodedToken = JWT.require(algorithm).withIssuer(issuer).build().verify(token);
+        if (decodedToken != null) {
+            return decodedToken.getSubject();        	
+        }
+		return null;
+	}
 }

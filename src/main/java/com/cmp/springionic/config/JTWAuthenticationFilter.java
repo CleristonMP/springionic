@@ -30,29 +30,36 @@ public class JTWAuthenticationFilter extends OncePerRequestFilter {
 	ClientRepository clientRepository;
 
 	@Override
-	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-			throws ServletException, IOException {
+	protected void doFilterInternal(HttpServletRequest request, 
+			HttpServletResponse response, 
+			FilterChain filterChain) throws ServletException, IOException {
 		
 		var token = this.recoverToken(request);
+		
 		var login = tokenService.validateToken(token);
 
-		if (login != null) {
-			Client client = clientRepository.findByEmail(login).orElseThrow(() -> new RuntimeException("User Not Found"));
+		if (login) {
+			String username = tokenService.getUsername(token);
+			Client client = clientRepository.findByEmail(username).orElseThrow(() -> new RuntimeException("User Not Found"));
 
 			List<SimpleGrantedAuthority> authorities = client.getRoles().stream()
 					.map(role -> new SimpleGrantedAuthority(Role.toEnum(role.getCod()).getDescription()))
 					.collect(Collectors.toList());
 			
 			var authentication = new UsernamePasswordAuthenticationToken(client, null, authorities);
-			SecurityContextHolder.getContext().setAuthentication(authentication);
+			
+			if (authentication != null) {
+				SecurityContextHolder.getContext().setAuthentication(authentication);				
+			}
 		}
 		filterChain.doFilter(request, response);
 	}
 
 	private String recoverToken(HttpServletRequest request) {
 		var authHeader = request.getHeader("Authorization");
-		if (authHeader == null)
-			return null;
-		return authHeader.replace("Bearer ", "");
+		if (authHeader != null && authHeader.startsWith("Bearer ")) {
+			return authHeader.replace("Bearer ", "");			
+		}
+		return null;
 	}
 }
