@@ -3,7 +3,6 @@ package com.cmp.springionic.config;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -44,11 +43,13 @@ public class JWTTokenService {
     public boolean validateToken(String token){
         try {
             Algorithm algorithm = Algorithm.HMAC512(jwtSecret);
-            var decodedToken = JWT.require(algorithm).withIssuer(issuer).build().verify(token);
-            var username = decodedToken.getSubject();
-            var expirationDate = decodedToken.getExpiresAt();
-            Date now = new Date(System.currentTimeMillis());
-            if (username != null && expirationDate != null && now.before(expirationDate)) {
+            var username = JWT.require(algorithm)
+            		.withIssuer(issuer)
+            		.build()
+            		.verify(token)
+            		.getSubject();
+            
+            if (username != null) {
             	return true;
             }
             
