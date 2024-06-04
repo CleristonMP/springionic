@@ -2,6 +2,7 @@ package com.cmp.springionic.services.validation;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -37,7 +38,7 @@ public class ClientInsertValidator implements ConstraintValidator<ClientInsert, 
 			list.add(new FieldMessage("cpfOrCnpj", "CNPJ inválido"));
 		}
 		
-		Client aux = repository.findByEmail(objDto.getEmail());
+		Optional<Client> aux = repository.findByEmail(objDto.getEmail());
 		if (aux != null) {
 			list.add(new FieldMessage("email", "Email já existe"));
 		}

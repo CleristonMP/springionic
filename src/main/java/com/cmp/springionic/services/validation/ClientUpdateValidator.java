@@ -3,6 +3,7 @@ package com.cmp.springionic.services.validation;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.HandlerMapping;
@@ -38,8 +39,8 @@ public class ClientUpdateValidator implements ConstraintValidator<ClientUpdate, 
 
 		List<FieldMessage> list = new ArrayList<>();
 
-		Client aux = repository.findByEmail(objDto.getEmail());
-		if (aux != null && !aux.getId().equals(uriId)) {
+		Optional<Client> aux = repository.findByEmail(objDto.getEmail());
+		if (aux != null && !aux.get().getId().equals(uriId)) {
 			list.add(new FieldMessage("email", "Email já existe"));
 		}
 
