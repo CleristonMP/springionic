@@ -10,11 +10,14 @@ import org.springframework.web.bind.annotation.RestController;
 import com.cmp.springionic.config.JWTTokenService;
 import com.cmp.springionic.domain.Client;
 import com.cmp.springionic.dto.CredentialsDTO;
+import com.cmp.springionic.dto.EmailDTO;
 import com.cmp.springionic.repositories.ClientRepository;
 import com.cmp.springionic.security.UserSS;
+import com.cmp.springionic.services.AuthService;
 import com.cmp.springionic.services.UserService;
 
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -24,6 +27,7 @@ public class AuthController {
 	private final ClientRepository repository;
 	private final PasswordEncoder passwordEncoder;
 	private final JWTTokenService tokenService;
+	private final AuthService authService;
 
 	@PostMapping("/login")
 	public ResponseEntity<CredentialsDTO> login(@RequestBody CredentialsDTO body) {
@@ -42,6 +46,12 @@ public class AuthController {
 		Client client = new Client(user.getId(), null, user.getUsername(), null, null, user.getPassword());
 		String token = tokenService.generateToken(client);
 		response.addHeader("Authorization", "Bearer " + token);
+		return ResponseEntity.noContent().build();
+	}
+	
+	@PostMapping("/forgot")
+	public ResponseEntity<Void> forgot(@Valid @RequestBody EmailDTO objDto) {
+		authService.sendNewPassword(objDto.getEmail());
 		return ResponseEntity.noContent().build();
 	}
 }

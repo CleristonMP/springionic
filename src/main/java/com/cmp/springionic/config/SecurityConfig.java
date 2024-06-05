@@ -35,7 +35,7 @@ public class SecurityConfig {
 
 	private static final String[] PUBLIC_MATCHERS_GET = { "/products/**", "/categories/**" };
 
-	private static final String[] PUBLIC_MATCHERS_POST = { "/clients/**" };
+	private static final String[] PUBLIC_MATCHERS_POST = { "/clients/**", "auth/forgot/**" };
 
 	@Bean
 	SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
