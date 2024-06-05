@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.cmp.springionic.domain.Order;
-import com.cmp.springionic.dto.CategoryDTO;
 import com.cmp.springionic.services.OrderService;
 
 import jakarta.validation.Valid;
