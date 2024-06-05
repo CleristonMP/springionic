@@ -16,10 +16,13 @@ import com.cmp.springionic.domain.Address;
 import com.cmp.springionic.domain.City;
 import com.cmp.springionic.domain.Client;
 import com.cmp.springionic.domain.enums.ClientType;
+import com.cmp.springionic.domain.enums.Role;
 import com.cmp.springionic.dto.ClientDTO;
 import com.cmp.springionic.dto.ClientNewDTO;
 import com.cmp.springionic.repositories.AddressRepository;
 import com.cmp.springionic.repositories.ClientRepository;
+import com.cmp.springionic.security.UserSS;
+import com.cmp.springionic.services.exceptions.AuthorizationException;
 import com.cmp.springionic.services.exceptions.DataIntegrityException;
 import com.cmp.springionic.services.exceptions.ObjectNotFoundException;
 
@@ -36,6 +39,12 @@ public class ClientService {
 	private AddressRepository addressRepository;
 
 	public Client findById(Long id) {
+		
+		UserSS user = UserService.authenticated();
+		if (user == null || !user.hasRole(Role.ADMIN) && !id.equals(user.getId())) {
+			throw new AuthorizationException("Acesso negado");
+		}
+		
 		Optional<Client> obj = repository.findById(id);
 		return obj.orElseThrow(() -> new ObjectNotFoundException(
 				"Objeto não encontrado! Id: " + id + ", Tipo: " + Client.class.getName()));

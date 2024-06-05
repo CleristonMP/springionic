@@ -46,7 +46,7 @@ public class JTWAuthenticationFilter extends OncePerRequestFilter {
 					.map(role -> new SimpleGrantedAuthority(Role.toEnum(role.getCod()).getDescription()))
 					.collect(Collectors.toList());
 			
-			var authentication = new UsernamePasswordAuthenticationToken(client, null, authorities);
+			UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(client, null, authorities);
 			
 			if (authentication != null) {
 				SecurityContextHolder.getContext().setAuthentication(authentication);				
