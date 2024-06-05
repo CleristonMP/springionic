@@ -4,9 +4,12 @@ import java.util.Date;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.cmp.springionic.domain.Client;
 import com.cmp.springionic.domain.Order;
 import com.cmp.springionic.domain.OrderItem;
 import com.cmp.springionic.domain.PaymentByBankSlip;
@@ -14,6 +17,8 @@ import com.cmp.springionic.domain.enums.PaymentStatus;
 import com.cmp.springionic.repositories.OrderItemRepository;
 import com.cmp.springionic.repositories.OrderRepository;
 import com.cmp.springionic.repositories.PaymentRepository;
+import com.cmp.springionic.security.UserSS;
+import com.cmp.springionic.services.exceptions.AuthorizationException;
 import com.cmp.springionic.services.exceptions.ObjectNotFoundException;
 
 @Service
@@ -68,5 +73,14 @@ public class OrderService {
 		orderItemRepository.saveAll(obj.getItems());
 		emailService.sendOrderConfirmationHtmlEmail(obj);
 		return obj;
+	}
+	
+	public Page<Order> findAllPaged(Pageable pageable) {
+		UserSS user = UserService.authenticated();
+		if (user == null) {
+			throw new AuthorizationException("Acesso negado");
+		}
+		Client client = clientService.findById(user.getId());
+		return repository.findByClient(client, pageable);
 	}
 }

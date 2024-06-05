@@ -27,18 +27,18 @@ public class CategoryService {
 		List<Category> list = repository.findAll();
 		return list.stream().map(obj -> new CategoryDTO(obj)).collect(Collectors.toList());
 	}
-	
+
 // 	Método antigo
 //	public Page<CategoryDTO> findAllPaged(Integer page, Integer linesPerPage, String orderBy, String direction) {
 //		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
 //		Page<Category> pageObj = repository.findAll(pageRequest);
 //		return pageObj.map(obj -> new CategoryDTO(obj));
 //	}
-	
+
 	public Page<CategoryDTO> findAllPaged(Pageable pageable) {
-	Page<Category> page = repository.findAll(pageable);
-	return page.map(obj -> new CategoryDTO(obj));
-}
+		Page<Category> page = repository.findAll(pageable);
+		return page.map(obj -> new CategoryDTO(obj));
+	}
 
 	public Category findById(Long id) {
 		Optional<Category> obj = repository.findById(id);
@@ -68,11 +68,11 @@ public class CategoryService {
 			throw new DataIntegrityException("Não é possível excluir uma categoria que possui produtos.");
 		}
 	}
-	
+
 	public Category fromDTO(CategoryDTO objDto) {
 		return new Category(objDto.getId(), objDto.getName());
 	}
-	
+
 	private void updateData(Category entity, CategoryDTO dto) {
 		entity.setName(dto.getName());
 	}
