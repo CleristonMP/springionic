@@ -1,5 +1,6 @@
 package com.cmp.springionic.services;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -11,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.cmp.springionic.domain.Address;
 import com.cmp.springionic.domain.City;
@@ -37,6 +39,9 @@ public class ClientService {
 	
 	@Autowired
 	private AddressRepository addressRepository;
+	
+	@Autowired
+	private S3Service s3Service;
 
 	public Client findById(Long id) {
 		
@@ -115,5 +120,9 @@ public class ClientService {
 	private void updateData(Client entity, ClientDTO dto) {
 		entity.setName(dto.getName());
 		entity.setEmail(dto.getEmail());
+	}
+	
+	public URI uploadProfilePicture(MultipartFile multipartFile) {
+		return s3Service.uploadFile(multipartFile);
 	}
 }
