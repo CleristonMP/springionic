@@ -1,11 +1,13 @@
 package com.cmp.springionic.services;
 
+import java.awt.image.BufferedImage;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -30,26 +32,32 @@ import com.cmp.springionic.services.exceptions.ObjectNotFoundException;
 
 @Service
 public class ClientService {
-	
+
 	@Autowired
 	private BCryptPasswordEncoder encoder;
 
 	@Autowired
 	private ClientRepository repository;
-	
+
 	@Autowired
 	private AddressRepository addressRepository;
-	
+
 	@Autowired
 	private S3Service s3Service;
 
+	@Autowired
+	private ImageService imageService;
+
+	@Value("${img.prefix.client.profile}")
+	private String prefix;
+
 	public Client findById(Long id) {
-		
+
 		UserSS user = UserService.authenticated();
 		if (user == null || !user.hasRole(Role.ADMIN) && !id.equals(user.getId())) {
 			throw new AuthorizationException("Acesso negado");
 		}
-		
+
 		Optional<Client> obj = repository.findById(id);
 		return obj.orElseThrow(() -> new ObjectNotFoundException(
 				"Objeto não encontrado! Id: " + id + ", Tipo: " + Client.class.getName()));
@@ -121,19 +129,18 @@ public class ClientService {
 		entity.setName(dto.getName());
 		entity.setEmail(dto.getEmail());
 	}
-	
+
 	@Transactional
 	public URI uploadProfilePicture(MultipartFile multipartFile) {
-		
+
 		UserSS user = UserService.authenticated();
 		if (user == null) {
 			throw new AuthorizationException("Acesso negado");
 		}
-		
-		URI uri = s3Service.uploadFile(multipartFile);
-		Client cli = repository.getReferenceById(user.getId());
-		cli.setImageUrl(uri.toString());
-		repository.save(cli);
-		return uri;
+
+		BufferedImage jpgImage = imageService.getJpgImageFromFile(multipartFile);
+		String fileName = prefix.concat(user.getId().toString()).concat(".jpg");
+
+		return s3Service.uploadFile(imageService.getInputStream(jpgImage, "jpg"), fileName, "image");
 	}
 }

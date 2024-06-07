@@ -32,18 +32,16 @@ public class S3Service {
 			String fileName = multipartFile.getOriginalFilename();
 			InputStream is = multipartFile.getInputStream();
 			String contentType = multipartFile.getContentType();
-			Long fileLength = (long) multipartFile.getBytes().length;
-			return uploadFile(is, fileName, contentType, fileLength);
+			return uploadFile(is, fileName, contentType);
 		} catch (IOException e) {
 			throw new FileException("Erro de IO: " + e.getMessage());
 		}
 	}
 
-	public URI uploadFile(InputStream is, String fileName, String contentType, Long fileLength) {
+	public URI uploadFile(InputStream is, String fileName, String contentType) {
 		try {
 			ObjectMetadata meta = new ObjectMetadata();
 			meta.setContentType(contentType);
-			meta.setContentLength(fileLength);
 			LOG.info("Iniciando upload");
 			this.s3client.putObject(bucketName, fileName, is, meta);
 			LOG.info("Upload finalizado");
