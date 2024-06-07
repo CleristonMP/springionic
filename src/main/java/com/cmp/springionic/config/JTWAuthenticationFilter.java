@@ -52,6 +52,7 @@ public class JTWAuthenticationFilter extends OncePerRequestFilter {
 				SecurityContextHolder.getContext().setAuthentication(authentication);				
 			}
 		}
+		response.addHeader("access-control-expose-headers", "Authorization");
 		filterChain.doFilter(request, response);
 	}
 

@@ -46,6 +46,7 @@ public class AuthController {
 		Client client = new Client(user.getId(), null, user.getUsername(), null, null, user.getPassword());
 		String token = tokenService.generateToken(client);
 		response.addHeader("Authorization", "Bearer " + token);
+		response.addHeader("access-control-expose-headers", "Authorization");
 		return ResponseEntity.noContent().build();
 	}
 	
