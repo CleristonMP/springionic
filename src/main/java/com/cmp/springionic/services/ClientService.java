@@ -122,7 +122,18 @@ public class ClientService {
 		entity.setEmail(dto.getEmail());
 	}
 	
+	@Transactional
 	public URI uploadProfilePicture(MultipartFile multipartFile) {
-		return s3Service.uploadFile(multipartFile);
+		
+		UserSS user = UserService.authenticated();
+		if (user == null) {
+			throw new AuthorizationException("Acesso negado");
+		}
+		
+		URI uri = s3Service.uploadFile(multipartFile);
+		Client cli = repository.getReferenceById(user.getId());
+		cli.setImageUrl(uri.toString());
+		repository.save(cli);
+		return uri;
 	}
 }

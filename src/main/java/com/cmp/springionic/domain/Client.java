@@ -62,6 +62,8 @@ public class Client implements Serializable {
 	@OneToMany(mappedBy = "client")
 	private final List<Order> orders = new ArrayList<>();
 	
+	private String imageUrl;
+	
 	public Client() {
 		this.addRole(Role.CLIENT);
 	}
