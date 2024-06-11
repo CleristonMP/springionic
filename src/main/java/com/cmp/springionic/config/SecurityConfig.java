@@ -24,37 +24,33 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @Configuration
 @EnableMethodSecurity
 public class SecurityConfig {
-	
+
 	@Autowired
-    private Environment env;
-	
+	private Environment env;
+
 	@Autowired
 	private JTWAuthenticationFilter jwtFilter;
 
 	private static final String[] PUBLIC_MATCHERS = { "/h2-console/**", "/auth/login" };
 
-	private static final String[] PUBLIC_MATCHERS_GET = { "/products/**", "/categories/**" };
+	private static final String[] PUBLIC_MATCHERS_GET = { "/products/**", "/categories/**", "/states/**" };
 
 	private static final String[] PUBLIC_MATCHERS_POST = { "/clients", "auth/forgot/**" };
 
 	@Bean
 	SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-		
+
 		if (Arrays.asList(env.getActiveProfiles()).contains("test")) {
 			http.headers((headers) -> headers.frameOptions(withDefaults()).disable());
-        }
-		
+		}
+
 		http.cors(withDefaults()).csrf((csrf) -> csrf.disable());
-		http.authorizeHttpRequests(
-				(authz) -> authz.requestMatchers(PUBLIC_MATCHERS).permitAll()
+		http.authorizeHttpRequests((authz) -> authz.requestMatchers(PUBLIC_MATCHERS).permitAll()
 				.requestMatchers(HttpMethod.POST, PUBLIC_MATCHERS_POST).permitAll()
-				.requestMatchers(HttpMethod.GET, PUBLIC_MATCHERS_GET).permitAll()
-				.anyRequest().authenticated())
-				.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
-				.httpBasic(withDefaults());
+				.requestMatchers(HttpMethod.GET, PUBLIC_MATCHERS_GET).permitAll().anyRequest().authenticated())
+				.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class).httpBasic(withDefaults());
 		http.sessionManagement(
-				(sessionManagement) -> sessionManagement
-					.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+				(sessionManagement) -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 		return http.build();
 	}
 
@@ -64,15 +60,15 @@ public class SecurityConfig {
 		source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
 		return source;
 	}
-	
-    @Bean
-    AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
-            throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();
-    }
-	
+
+	@Bean
+	AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
+			throws Exception {
+		return authenticationConfiguration.getAuthenticationManager();
+	}
+
 	@Bean
 	BCryptPasswordEncoder bCryptPasswordEncoder() {
-		return new BCryptPasswordEncoder(); 
+		return new BCryptPasswordEncoder();
 	}
 }
