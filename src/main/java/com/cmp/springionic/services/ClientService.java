@@ -50,7 +50,7 @@ public class ClientService {
 
 	@Value("${img.prefix.client.profile}")
 	private String prefix;
-	
+
 	@Value("${img.profile.size}")
 	private Integer size;
 
@@ -81,6 +81,17 @@ public class ClientService {
 	public Page<ClientDTO> findAllPaged(Pageable pageable) {
 		Page<Client> page = repository.findAll(pageable);
 		return page.map(obj -> new ClientDTO(obj));
+	}
+
+	public Client findByEmail(String email) {
+		UserSS user = UserService.authenticated();
+		if (user == null || !user.hasRole(Role.ADMIN) && !email.equals(user.getUsername())) {
+			throw new AuthorizationException("Acesso negado");
+		}
+
+		Client obj = repository.findByEmail(email).orElseThrow(() -> new ObjectNotFoundException(
+				"Objeto não encontrado! Id: " + user.getId() + ", Tipo: " + Client.class.getName()));
+		return obj;
 	}
 
 	@Transactional
@@ -144,7 +155,7 @@ public class ClientService {
 		BufferedImage jpgImage = imageService.getJpgImageFromFile(multipartFile);
 		jpgImage = imageService.cropSquare(jpgImage);
 		jpgImage = imageService.resize(jpgImage, size);
-		
+
 		String fileName = prefix.concat(user.getId().toString()).concat(".jpg");
 
 		return s3Service.uploadFile(imageService.getInputStream(jpgImage, "jpg"), fileName, "image");
