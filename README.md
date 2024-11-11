@@ -256,7 +256,7 @@ Content-Type: application/json
 ```
 
 **PUT**
-```json
+```
 PUT /clients/1
 Content-Type: application/json
 ```
@@ -589,7 +589,7 @@ graph LR
     Estado((Estado))
     Cidade((Cidade))
     Categoria((Categoria))
-    Pagamento((Pagamento)) || {abstract}
+    Pagamento((Pagamento)) {abstract}
       Pagamento_Boleto((Pagamento Boleto)) --> Pagamento
       Pagamento_Cartao((Pagamento Cartao)) --> Pagamento
     Pedido((Pedido))
