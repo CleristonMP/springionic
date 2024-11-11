@@ -589,11 +589,11 @@ graph LR
     Produto((Produto))
     Pedido((Pedido))
     ItemPedido((ItemPedido))
-    Pagamento((Pagamento)) %% Classe abstrata
+    Pagamento((Pagamento))
     PagamentoComBoleto((Pagamento Com Boleto)) --> Pagamento
     PagamentoComCartao((Pagamento Com Cartão)) --> Pagamento
     Cliente((Cliente))
-    Telefone((Telefone)) %% Entidade fraca
+    Telefone((Telefone))
     Endereco((Endereço))
     Cidade((Cidade))
     Estado((Estado))
@@ -614,7 +614,6 @@ graph LR
   Endereco --> Cidade
   Cidade --> Estado
 ```
-
 
 
 ## Instalação e Execução
