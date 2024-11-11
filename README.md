@@ -22,32 +22,32 @@ O SpringIonic é uma aplicação desenvolvida com Spring Boot e Ionic que oferec
 
 | Endpoint | Descrição | Método | Acesso |
 |---|---|---|---|
-| `/auth/login` | Realiza o login na aplicação | `POST` | Permit everyone |
+| `/auth/login` | Realiza o login na aplicação | `POST` | Acesso público |
 | `/auth/refresh_token` | Gera um novo token de acesso | `POST` | Autenticado |
-| `/auth/forgot` | Solicita uma nova senha | `POST` | Permit everyone |
-| `/categories` | Retorna lista de categorias | `GET` | Permit everyone |
-| `/categories/{id}` | Retorna uma categoria por id | `GET` | Permit everyone |
-| `/categories/page` | Retorna lista de categorias paginadas | `GET` | Permit everyone |
+| `/auth/forgot` | Solicita uma nova senha | `POST` | Acesso público |
+| `/categories` | Retorna lista de categorias | `GET` | Acesso público |
+| `/categories/{id}` | Retorna uma categoria por id | `GET` | Acesso público |
+| `/categories/page` | Retorna lista de categorias paginadas | `GET` | Acesso público |
 | `/categories` | Insere uma nova categoria | `POST` | Role 'ADMIN' |
 | `/categories/{id}` | Atualiza uma categoria | `PUT` | Role 'ADMIN' |
 | `/categories/{id}` | Deleta uma categoria | `DELETE` | Role 'ADMIN' |
 | `/clients` | Retorna lista de clientes | `GET` | Role 'ADMIN' |
-| `/clients/{id}` | Retorna um cliente por id | `GET` | Permit everyone |
-| `/clients/email` | Retorna um cliente por email | `GET` | Permit everyone |
+| `/clients/{id}` | Retorna um cliente por id | `GET` | Acesso público |
+| `/clients/email` | Retorna um cliente por email | `GET` | Acesso público |
 | `/clients/page` | Retorna lista de clientes paginadas | `GET` | Role 'ADMIN' |
-| `/clients` | Insere um novo cliente | `POST` | Permit everyone |
-| `/clients/{id}` | Atualiza um cliente | `PUT` | Permit everyone |
+| `/clients` | Insere um novo cliente | `POST` | Acesso público |
+| `/clients/{id}` | Atualiza um cliente | `PUT` | Acesso público |
 | `/clients/{id}` | Deleta um cliente | `DELETE` | Role 'ADMIN' |
 | `/clients/picture` | Realiza upload da foto de perfil do cliente | `POST` | Autenticado |
 | `/orders` | Retorna lista de pedidos | `GET` | Autenticado |
 | `/orders/{id}` | Retorna um pedido por id | `GET` | Autenticado |
 | `/orders` | Insere um novo pedido | `POST` | Autenticado |
 | `/orders` | Retorna lista de pedidos paginadas | `GET` | Autenticado |
-| `/products` | Retorna lista de produtos | `GET` | Permit everyone |
-| `/products/{id}` | Retorna um produto por id | `GET` | Permit everyone |
-| `/products` | Retorna lista de produtos paginadas | `GET` | Permit everyone |
-| `/states` | Retorna lista de estados | `GET` | Permit everyone |
-| `/states/{stateId}/cities` | Retorna lista de cidades de um determinado estado | `GET` | Permit everyone |
+| `/products` | Retorna lista de produtos | `GET` | Acesso público |
+| `/products/{id}` | Retorna um produto por id | `GET` | Acesso público |
+| `/products` | Retorna lista de produtos paginadas | `GET` | Acesso público |
+| `/states` | Retorna lista de estados | `GET` | Acesso público |
+| `/states/{stateId}/cities` | Retorna lista de cidades de um determinado estado | `GET` | Acesso público |
 
 ### Detalhando o Endpoint `/auth/login`
 
@@ -72,10 +72,12 @@ O endpoint `/auth/login` é responsável por autenticar um usuário no sistema. 
 * **Falha (401 Unauthorized):** Retorna um código de status 401 Unauthorized se as credenciais forem inválidas.
 
 #### Exemplo de requisição
-```json
+```
 POST /auth/login
 Content-Type: application/json
+```
 
+```json
 {
     "email": "usuario@example.com",
     "password": "minhaSenha123"
@@ -158,10 +160,12 @@ GET /categories
 ```
 
 #### Exemplo de requisição (POST)
-```json
+```
 POST /categories
 Content-Type: application/json
+```
 
+```json
 {
     "name": "Livros"
 }
@@ -238,10 +242,12 @@ O endpoint `/clients` é responsável por gerenciar os clientes da aplicação. 
 #### Exemplos de requisição
 
 **POST**
-```json
+```
 POST /clients
 Content-Type: application/json
+```
 
+```json
 {
     "name": "João da Silva",
     "email": "joao@example.com",
@@ -253,7 +259,9 @@ Content-Type: application/json
 ```json
 PUT /clients/1
 Content-Type: application/json
+```
 
+```json
 {
     "name": "João Silva Santos"
 }
@@ -335,10 +343,12 @@ O endpoint `/orders` é responsável por gerenciar os pedidos dos clientes. Ele 
 #### Exemplos de requisição
 
 **POST**
-```json
+```
 POST /orders
 Content-Type: application/json
+```
 
+```json
 {
     "clientId": 1,
     "items": [
@@ -363,10 +373,12 @@ Content-Type: application/json
 ```
 
 **PUT**
-```json
+```
 PUT /orders/1
 Content-Type: application/json
+```
 
+```json
 {
     "status": "shipped"
 }
@@ -451,10 +463,12 @@ GET /products?categoryId=1
 ```
 
 **POST**
-```json
+```
 POST /products
 Content-Type: application/json
+```
 
+```json
 {
     "name": "Smartphone X",
     "description": "Smartphone de última geração",
@@ -466,10 +480,12 @@ Content-Type: application/json
 ```
 
 **PUT**
-```json
+```
 PUT /products/1
 Content-Type: application/json
+```
 
+```json
 {
     "price": 2799.99
 }
@@ -534,10 +550,12 @@ GET /states?name=São%20Paulo
 ```
 
 **POST**
-```json
+```
 POST /states
 Content-Type: application/json
+```
 
+```json
 {
     "name": "Rio de Janeiro",
     "acronym": "RJ",
@@ -567,23 +585,23 @@ public ResponseEntity<State> createState(@Valid @RequestBody StateDTO stateDTO) 
 ```mermaid
 graph LR
   subgraph Banco de Dados
-    Cliente [Cliente]
-    Estado [Estado]
-    Cidade [Cidade]
-    Categoria [Categoria]
-    Pagamento [Pagamento] || {abstract}
-      Pagamento Boleto [Pagamento Boleto] --> Pagamento
-      Pagamento Cartao [Pagamento Cartao] --> Pagamento
-    Pedido [Pedido]
-    Item Pedido [Item Pedido]
-    Produto [Produto]
+    Cliente((Cliente))
+    Estado((Estado))
+    Cidade((Cidade))
+    Categoria((Categoria))
+    Pagamento((Pagamento)) || {abstract}
+      Pagamento_Boleto((Pagamento Boleto)) --> Pagamento
+      Pagamento_Cartao((Pagamento Cartao)) --> Pagamento
+    Pedido((Pedido))
+    Item_Pedido((Item Pedido))
+    Produto((Produto))
   end
   Cliente --> Endereço{1..N}
   Cliente --> Telefone{1..N}
   Pedido --> Cliente
   Pedido --> Pagamento
-  Pedido --> Item Pedido{1..N}
-  Item Pedido --> Produto
+  Pedido --> Item_Pedido{1..N}
+  Item_Pedido --> Produto
   Produto --> Categoria{1..N}
   Cidade --> Estado
 ```
