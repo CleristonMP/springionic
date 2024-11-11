@@ -584,19 +584,19 @@ public ResponseEntity<State> createState(@Valid @RequestBody StateDTO stateDTO) 
 
 ```mermaid
 graph LR
-  subgraph Banco de Dados
+  subgraph Banco_de_Dados
     Cliente((Cliente))
     Estado((Estado))
     Cidade((Cidade))
     Categoria((Categoria))
-    Pagamento((Pagamento)) {abstract}
-      Pagamento_Boleto((Pagamento Boleto)) --> Pagamento
-      Pagamento_Cartao((Pagamento Cartao)) --> Pagamento
+    Pagamento((Pagamento))
+    Pagamento_Boleto((Pagamento Boleto)) --> Pagamento
+    Pagamento_Cartao((Pagamento Cartao)) --> Pagamento
     Pedido((Pedido))
     Item_Pedido((Item Pedido))
     Produto((Produto))
   end
-  Cliente --> Endereço{1..N}
+  Cliente --> Endereco{1..N}
   Cliente --> Telefone{1..N}
   Pedido --> Cliente
   Pedido --> Pagamento
