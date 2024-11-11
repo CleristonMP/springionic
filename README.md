@@ -584,27 +584,37 @@ public ResponseEntity<State> createState(@Valid @RequestBody StateDTO stateDTO) 
 
 ```mermaid
 graph LR
-  subgraph Banco_de_Dados
-    Cliente((Cliente))
-    Estado((Estado))
-    Cidade((Cidade))
+  subgraph Entidades
     Categoria((Categoria))
-    Pagamento((Pagamento))
-    Pagamento_Boleto((Pagamento Boleto)) --> Pagamento
-    Pagamento_Cartao((Pagamento Cartao)) --> Pagamento
-    Pedido((Pedido))
-    Item_Pedido((Item Pedido))
     Produto((Produto))
+    Pedido((Pedido))
+    ItemPedido((ItemPedido))
+    Pagamento((Pagamento)) %% Classe abstrata
+    PagamentoComBoleto((Pagamento Com Boleto)) --> Pagamento
+    PagamentoComCartao((Pagamento Com Cartão)) --> Pagamento
+    Cliente((Cliente))
+    Telefone((Telefone)) %% Entidade fraca
+    Endereco((Endereço))
+    Cidade((Cidade))
+    Estado((Estado))
   end
-  Cliente --> Endereco{1..N}
-  Cliente --> Telefone{1..N}
-  Pedido --> Cliente
+  
+  %% Relacionamentos
+  Categoria --> Produto
+  Produto --> Categoria
+  Produto --> ItemPedido
+  Pedido --> ItemPedido{1..N}
   Pedido --> Pagamento
-  Pedido --> Item_Pedido{1..N}
-  Item_Pedido --> Produto
-  Produto --> Categoria{1..N}
+  Pedido --> Cliente
+  Pedido --> Endereco
+  Cliente --> Pedido{1..N}
+  Cliente --> Telefone{1..N}
+  Cliente --> Endereco{1..N}
+  Endereco --> Cliente
+  Endereco --> Cidade
   Cidade --> Estado
 ```
+
 
 
 ## Instalação e Execução
